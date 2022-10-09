@@ -1,0 +1,75 @@
+window:
+  padding:
+    x: 20
+    y: 20
+
+  class:
+    istance: Alacritty
+    general: Alacritty
+
+scrolling:
+  history: 10000
+  multiplier: 4
+
+
+font:
+  size: 9
+
+  normal:
+    family: JetBrainsMono Nerd Font
+    style: Medium
+  bold:
+    family: JetBrainsMono Nerd Font
+    style: Bold
+  italic:
+    family: JetBrainsMono Nerd Font
+    style: Medium Italic
+  bold_italic:
+    family: JetBrainsMono Nerd Font
+    style: Bold Italic
+draw_bold_text_with_bright_colors: false
+
+
+schemes:
+  gruvbox: &gruvbox
+    primary:
+    background: '#1a1b26'
+    foreground: '#ffffff'
+
+# Colors (Taerminal)
+colors:
+  # Default colors
+  primary:
+    background: '0x1a1b26'
+    foreground: '0xffffff'
+  cursor:
+    background: '0xffffff'
+    foreground: '0x1a1b26'
+
+  # Normal colors
+  normal:
+    black:   '0x1a1b26'
+    red:     '0xFf0bf6'
+    green:   '0x0bff21'
+    yellow:  '0xd79921'
+    blue:    '0x00ffd2'
+    magenta: '0xFF00FF'
+    cyan:    '0xa2e1f8'
+    white:   '0xf1f1f1'
+
+  # Bright colors
+  bright:
+    black:   '0x6f6f6f'
+    red:     '0xff4499'
+    green:   '0xb4fb73'
+    yellow:  '0xfabd2f'
+    blue:    '0xc2e3ff'
+    magenta: '0xffc6ff'
+    cyan:    '0xc0e9f8'
+    white:   '0xffffff'
+
+cursor:
+  style:
+    shape: Underline
+    blinking: off
+    blink-interval: 750

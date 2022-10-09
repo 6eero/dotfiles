@@ -1,0 +1,237 @@
+#-------------------------------------#
+#                                     #
+#               colors                #
+#                                     #
+#-------------------------------------#
+
+[colors]
+    background	    = #000000
+    accent0         = #ffffff
+    accent1         = #393b3d
+    accent2         = #665c54
+    accent3         = #282828
+
+#-------------------------------------#
+#                                     #
+#               SETTINGS              #
+#                                     #
+#-------------------------------------#
+
+[bar/bar1]
+    ;monitor = ${env:MONITOR:HDMI-1}
+    width = 100%
+    height = 22
+    fixed_center = true
+    bottom = true
+    separator = |
+    separator-foreground = ${colors.accent1}
+
+    background = ${colors.background}
+    foreground = ${colors.accent0}
+
+    ;Distance from left and right
+    padding-left = 2
+    padding-right = 2
+
+    ;Distance between text
+    module-margin-left = 2
+    module-margin-right = 2
+
+    ;Font
+    font-0 = JetBrainsMono Nerd Font:style=Regular:size=8;2
+
+    ;Behaviour
+    cursor-click = pointer
+    cursor-scroll = ns-resize
+
+    radius-top = 0
+    radius-bottom = 0
+
+
+#-------------------------------------#
+#                                     #
+#               MODULES               #
+#                                     #
+#-------------------------------------#
+
+modules-left   = powermenu xwindow
+modules-center = i3
+modules-right  =  pulseaudio time date
+
+[module/brightness]
+    ;type = internal/xbacklight
+    type = internal/backlight
+
+    ; Use the following command to list available cards:
+    ; $ ls -1 /sys/class/backlight/
+    ;card = intel_backlight
+    card = amdgpu_bl0
+
+    ; Available tags:
+    ;   <label> (default)
+    ;   <ramp>
+    ;   <bar>
+    format = <ramp> <label>
+    format-background = ${colors.background}
+    format-foreground = ${colors.accent0}
+    format-overline = ${colors.background}
+    format-underline = ${colors.background}
+    format-padding = 0
+
+    ; Available tokens:
+    ;   %percentage% (default)
+    label = %percentage%%
+
+    ; Only applies if <ramp> is used
+    ramp-0 = 
+    ramp-1 = 
+    ramp-2 = 
+    ramp-3 = 
+    ramp-4 = 
+
+    enable-scroll = true
+
+[module/xwindow]
+    type = internal/xwindow
+    label = %title:0:30:...%
+
+[module/i3]
+    spacing = 1
+    type = internal/i3
+    format = <label-state> <label-mode>
+    index-sort = true
+    wrapping-scroll = false
+
+    label-mode-padding = ${module/i3.spacing}
+    label-mode-foreground = ${colors.accent0}
+    label-mode-background = ${colors.background}
+
+    ; focused = Active workspace on focused monitor
+    label-focused = %index%
+    label-focused-background = ${colors.backgroung}
+    label-focused-foreground = ${colors.accent0}
+    label-focused-padding = ${module/i3.spacing}
+
+    ; unfocused = Inactive workspace on any monitor
+    label-unfocused = %index%
+    label-unfocused-foreground = ${colors.accent2}
+    label-unfocused-padding = ${module/i3.spacing}
+
+    ; visible = Active workspace on unfocused monitor
+    label-visible = %index%
+    label-visible-background = ${self.label-focused-background}
+    label-visible-padding = ${self.label-focused-padding}
+
+    ; urgent = Workspace with urgency hint    label-urgent = %index%
+    label-urgent-background = ${colors.red}
+    label-urgent-padding = ${module/i3.spacing}
+
+    ; Separator in between workspaces
+    ; label-separator = |
+
+[module/time]
+    type = internal/date
+
+    ; Update interval
+    interval = 1.0
+
+    ; Format
+    time = %H:%M
+
+    ; Label
+    label            =  %time%
+    label-foreground = ${colors.accent0}
+    label-padding    = 0
+
+[module/date]
+    type = internal/date
+
+    ; Update interval
+    interval = 1.0
+
+    ; Format
+    date = %d %B
+
+    ; Label
+    label            = %date%
+    label-foreground = ${colors.accent0}
+    label-padding    = 0
+
+
+[module/pulseaudio]
+    type = internal/pulseaudio
+
+    format-volume = <label-volume>
+    label-volume =  %percentage%%
+
+
+    label-muted =  Muted
+    label-muted-foreground = ${colors.accent0}
+
+    bar-volume-width = 10
+
+    bar-volume-gradient = false
+    bar-volume-indicator = |
+    bar-volume-indicator-font = 2
+    bar-volume-fill = ─
+    bar-volume-fill-font = 2
+    bar-volume-empty = ─
+    bar-volume-empty-font = 2
+    bar-volume-empty-foreground = ${colors.accent0}
+
+
+[module/powermenu]
+    type = custom/menu
+
+    expand-right = true
+
+    format-spacing = 1
+
+    label-open =" "
+    label-open-foreground = ${colors.accent0}
+    label-close = cancel
+    label-close-foreground = ${colors.accent0}
+    label-separator = |
+    label-separator-foreground = ${colors.accent0}
+
+    menu-0-0 = reboot
+    menu-0-0-exec = systemctl reboot
+
+    menu-1-0 = cancel
+    menu-1-0-exec = menu-open-0
+
+    menu-2-0 = power off
+    menu-2-0-exec = systemctl poweroff
+
+
+    menu-0-1 = power off
+    menu-0-1-exec = menu-open-2
+
+    menu-1-1 = reboot
+    menu-1-1-exec = menu-open-0
+
+    menu-2-1 = back
+    menu-2-1-exec = menu-open-0
+
+
+
+
+#-------------------------------------#
+#                                     #
+#                OTHER                #
+#                                     #
+#-------------------------------------#
+
+[settings]
+    screenchange-reload = true
+    ;compositing-background = xor
+    ;compositing-background = screen
+    ;compositing-foreground = source
+    ;compositing-border = over
+    ;pseudo-transparency = false
+
+[global/wm]
+    margin-top = 5
+    margin-bottom = 5
+
+    ; vim:ft=dosini

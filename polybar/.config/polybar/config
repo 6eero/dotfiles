@@ -5,11 +5,14 @@
 #-------------------------------------#
 
 [colors]
+    #background      = #1c1f20
     background	    = #000000
+    #accent0         = #ffdf87
     accent0         = #ffffff
     accent1         = #393b3d
     accent2         = #665c54
     accent3         = #282828
+    accent4         = #ffafff
 
 #-------------------------------------#
 #                                     #
@@ -20,7 +23,7 @@
 [bar/bar1]
     ;monitor = ${env:MONITOR:HDMI-1}
     width = 100%
-    height = 22
+    height = 28
     fixed_center = true
     bottom = true
     separator = |
@@ -38,8 +41,9 @@
     module-margin-right = 2
 
     ;Font
-    font-0 = JetBrainsMono Nerd Font:style=Regular:size=8;2
-
+    font-0 = JetBrainsMono Nerd Font:style=Regular:size=9;3
+    font-1 = FontAwesome:style=Regular:size=11;2 
+     
     ;Behaviour
     cursor-click = pointer
     cursor-scroll = ns-resize
@@ -56,7 +60,7 @@
 
 modules-left   = powermenu xwindow
 modules-center = i3
-modules-right  =  pulseaudio time date
+modules-right  =  wlan brightness pulseaudio battery time
 
 [module/brightness]
     ;type = internal/xbacklight
@@ -90,6 +94,29 @@ modules-right  =  pulseaudio time date
     ramp-4 = 
 
     enable-scroll = true
+
+[module/wlan]
+    type = internal/network
+    interface = wlo1
+    interval = 3.0
+
+    format-connected = <ramp-signal> <label-connected>
+    format-connected-foreground = ${colors.accent0}
+    label-connected =" %essid%"
+
+    format-disconnected = <label-disconnected>
+    format-disconnected-foreground = ${colors.accent0}
+    label-disconnected =   Not connected
+    label-disconnected-foreground = ${colors.accent0}
+
+    ramp-signal-0 = 
+    ramp-signal-1 = 
+    ramp-signal-2 = 
+    ramp-signal-3 = 
+    ramp-signal-4 = 
+    ramp-signal-foreground = ${colors.foreground-alt}
+    format-background = ${colors.background}
+    format-padding = 4
 
 [module/xwindow]
     type = internal/xwindow
@@ -163,13 +190,13 @@ modules-right  =  pulseaudio time date
 
     format-volume = <label-volume>
     label-volume =  %percentage%%
-
+    
 
     label-muted =  Muted
     label-muted-foreground = ${colors.accent0}
 
     bar-volume-width = 10
-
+    
     bar-volume-gradient = false
     bar-volume-indicator = |
     bar-volume-indicator-font = 2
@@ -179,6 +206,31 @@ modules-right  =  pulseaudio time date
     bar-volume-empty-font = 2
     bar-volume-empty-foreground = ${colors.accent0}
 
+[module/battery]
+    type = internal/battery
+    battery = BAT0
+    adapter = AC
+    full-at = 98
+    label = %battery%
+    format-prefix = BAT
+    format-charging = <label-charging>
+    format-discharging = <ramp-capacity> <label-discharging>
+
+    label-charging = " %percentage%%"
+    label-discharging = " %percentage%%" 
+    ramp-capacity-0 = 
+    ramp-capacity-1 = 
+    ramp-capacity-2 = 
+    ramp-capacity-3 = 
+    ramp-capacity-4 = 
+
+   format-charging-background = ${colors.backgound}
+   format-discharging-background = ${colors.background}
+   format-charging-padding = 0
+   format-discharging-padding = 0
+   format-charging-foreground = ${colors.accent0}
+   format-discharging-foreground = ${colors.accent0}
+   ramp-foreground = ${colors.accent0}
 
 [module/powermenu]
     type = custom/menu
@@ -188,32 +240,30 @@ modules-right  =  pulseaudio time date
     format-spacing = 1
 
     label-open =" "
-    label-open-foreground = ${colors.accent0}
+    label-open-foreground = ${colors.accent0T}
     label-close = cancel
-    label-close-foreground = ${colors.accent0}
+    label-close-foreground = ${colors.accent4}
     label-separator = |
     label-separator-foreground = ${colors.accent0}
 
     menu-0-0 = reboot
-    menu-0-0-exec = systemctl reboot
+    menu-0-1 = power off
+    menu-0-2 = log out
 
-    menu-1-0 = cancel
-    menu-1-0-exec = menu-open-0
+
+    menu-0-0-exec = menu-open-1
+    menu-0-1-exec = menu-open-2
+    menu-0-2-exec = menu-open-3
+
+    menu-1-0 = reboot
+    menu-1-0-exec = systemctl reboot
+
 
     menu-2-0 = power off
     menu-2-0-exec = systemctl poweroff
 
-
-    menu-0-1 = power off
-    menu-0-1-exec = menu-open-2
-
-    menu-1-1 = reboot
-    menu-1-1-exec = menu-open-0
-
-    menu-2-1 = back
-    menu-2-1-exec = menu-open-0
-
-
+    menu-3-0 = log out
+    menu-3-0-exec = i3lock-fancy
 
 
 #-------------------------------------#

@@ -1,51 +1,21 @@
-#   --------------
-# < i3 config file >
-#   --------------
-#        \   ^__^
-#         \  (oo)\_______
-#            (__)\       )\/\
-#                ||----w |
-#                ||     ||
-
-# --------------------------------------- #
-#            GENERAL SETTINGS             #
-# ----------------------------------------#
+# i3 config file (v4)
 
 # Set the mod key
 set $mod Mod4
 
-# Set the font
-font pango: "JetBrainsMono Nerd Font:style=Regular:size=10.5;3"
-
-# reload the configuration file
-bindsym $mod+Shift+c reload
-
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
-# --------------------------------------- #
-#                  GAPS                   #
-# ----------------------------------------#
-
-
-
-set $inner_gaps 15
-set $outer_gaps 12
-
 for_window [class="^.*"] border pixel 5
 
-gaps inner $inner_gaps
-gaps outer $outer_gaps
+# Set the font
+font pango: "JetBrainsMono Nerd Font:style=Regular:size=10.5;3"
 
 # --------------------------------------- #
 #            START UP PROGRAMS            #
 # ----------------------------------------#
-
 # statup with login
-exec i3-lock
+exec --no-startup-id i3lock-fancy
+
+# autotilting
+exec_always --no-startup-id ./Scripts/autotilting
 
 # start polybar
 exec_always --no-startup-id ~/.config/polybar/launch.sh
@@ -61,43 +31,88 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
 # Maintain the wallpaper after the reboot
-exec_always nitrogen --restore
+exec_always --no-startup-id nitrogen --restore
+
+exec_always --no-startup-id ~/Scripts/nordvpnconnect.sh
 
 # --------------------------------------- #
 #              KEYBINDINGS                #
 # ----------------------------------------#
 
-# Start a terminal (alacritty)
-bindsym $mod+Return exec alacritty
+# lock screen
+bindsym $mod+Shift+e exec --no-startup-id i3lock-fancy
 
-# Kill focused window
+# start a terminal
+#bindsym $mod+Return exec i3-sensible-terminal
+
+# start a terminal (alacritty)
+bindsym $mod+Return exec --no-startup-id alacritty
+
+# kill focused window
 bindsym $mod+q kill
 
-# Start rofi
-bindsym $mod+d exec rofi -modi drun -show drun -show-icons
+# start rofi (a program launcher)
+bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -show-icons
 
-# Save a full screenshot to my pictures folder:
-bindsym --release $mod+Shift+s exec scrot /home/gero/Pictures/Screenshots/%Y-%m-%d-%H%M%S.png
+# increse-decrese brightness
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 
-# Save a selection screenshot to my clipboard:
-bindsym --release $mod+s exec scrot -s -f -o "/tmp/image.png" && xclip -selection clipboard -t image/png -i /tmp/image.png
+## Screenshots
+#bindsym Print exec --no-startup-id maim "/home/$USER/Pictures/$(date)"
+#bindsym $mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) "/home/$USER/Pictures/$(date)"
+#bindsym Shift+Print exec --no-startup-id maim --select "/home/$USER/Pictures/$(date)"
 
+## Clipboard Screenshots
+#bindsym Ctrl+Print exec --no-startup-id maim | xclip -selection clipboard -t image/png
+#bindsym Ctrl+$mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+bindsym Print exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
 
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-bindsym $mod+i focus up
-bindsym $mod+l focus right
+bindsym $mod+l focus up
+bindsym $mod+ograve focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
 
 # move focused window
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+k move down
-bindsym $mod+Shift+i move up
-bindsym $mod+Shift+l move right
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+ograve move right
 
-# enter fullscreen mode for the focused window
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -148,14 +163,31 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+# bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
         bindsym j resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
-        bindsym i resize shrink height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym ograve resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -165,6 +197,29 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# --------------------------------------- #
+#                  i3 BAR                 #
+# ----------------------------------------#
+
+#bar {
+#        status_command i3status --config ~/.i3status.conf
+#	position top
+#	workspace_buttons no
+#	font pango:DejaVu Sans Mono 10
+#	separator_symbol " "
+#
+#	colors {
+#		background $background
+#		separator $base01
+#		statusline $base04
+#	        # State             Border  BG      Text
+#        	focused_workspace   fg0 $base0D $background
+#        	active_workspace    fg0 $base03 $background
+#        	inactive_workspace  $base03 $base01 fg0
+#   	    	urgent_workspace    $base08 $base08 $background
+#        	binding_mode        $background $base0A $background
+#   	 }
+#}
 
 # --------------------------------------- #
 #                COLOURS                  #
